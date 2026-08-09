@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>LabLoop Live Record</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="brand" href="#dashboard" aria-label="LabLoop dashboard home">
+        <span class="brand-mark" aria-hidden="true">LL</span>
+        <span>LabLoop <strong>Live record</strong></span>
+      </a>
+      <div class="connection" role="status" aria-live="polite">
+        <span id="connection-dot" class="connection-dot"></span>
+        <span id="connection-label">Connecting</span>
+        <time id="last-sync">—</time>
+      </div>
+    </header>
+
+    <main id="dashboard" class="dashboard">
+      <aside class="run-rail" aria-labelledby="run-heading">
+        <div>
+          <p class="section-code">RUN SELECTOR</p>
+          <h1 id="run-heading">Research session</h1>
+          <p class="rail-copy">Read-only telemetry from the shared experiment record.</p>
+        </div>
+        <label for="run-select">Active run</label>
+        <select id="run-select" disabled>
+          <option>Loading runs…</option>
+        </select>
+        <p id="view-state" class="view-state" role="status">Connecting to LabLoop…</p>
+        <dl class="rail-meta">
+          <div><dt>Refresh</dt><dd>Every 1 second</dd></div>
+          <div><dt>Mode</dt><dd>Observe only</dd></div>
+        </dl>
+      </aside>
+
+      <div class="workspace" aria-live="polite" aria-busy="true">
+        <section id="run-hero" class="run-hero" aria-labelledby="protocol-name">
+          <div class="hero-main">
+            <p id="protocol-version" class="hero-code">PROTOCOL —</p>
+            <h2 id="protocol-name">Waiting for a run</h2>
+            <div class="hero-meta">
+              <span id="operator">Operator —</span>
+              <span id="run-status" class="status-badge">Loading</span>
+            </div>
+          </div>
+          <div class="step-readout">
+            <span>Current step</span>
+            <strong id="step-number">—</strong>
+            <p id="step-detail">Awaiting experiment data</p>
+          </div>
+        </section>
+
+        <section class="data-strip" aria-label="Run overview">
+          <div class="samples-panel">
+            <div class="section-heading">
+              <h2>Samples</h2><span id="sample-count">0 tracked</span>
+            </div>
+            <div id="samples" class="chip-list"><span class="placeholder">No samples yet</span></div>
+          </div>
+          <div class="measurements-panel">
+            <div class="section-heading">
+              <h2>Latest measurements</h2><span>Recorded data</span>
+            </div>
+            <ol id="measurements" class="compact-list"><li class="placeholder">No measurements yet</li></ol>
+          </div>
+        </section>
+
+        <div class="signal-grid">
+          <section class="signal-panel alert-panel" aria-labelledby="deviations-heading">
+            <div class="section-heading">
+              <h2 id="deviations-heading">Deviations</h2><span id="deviation-count">0 flags</span>
+            </div>
+            <ol id="deviations" class="signal-list"><li class="placeholder">No deviations recorded</li></ol>
+          </section>
+          <section class="signal-panel" aria-labelledby="messages-heading">
+            <div class="section-heading">
+              <h2 id="messages-heading">Supervisor channel</h2><span id="message-count">0 messages</span>
+            </div>
+            <ol id="messages" class="signal-list"><li class="placeholder">No supervisor messages</li></ol>
+          </section>
+        </div>
+
+        <section class="inventory-panel" aria-labelledby="inventory-heading">
+          <div class="section-heading">
+            <h2 id="inventory-heading">Inventory watch</h2><span id="request-count">0 pending restocks</span>
+          </div>
+          <div id="inventory" class="inventory-list"><p class="placeholder">Loading inventory…</p></div>
+        </section>
+
+        <section class="timeline-panel" aria-labelledby="timeline-heading">
+          <div class="timeline-title">
+            <div>
+              <h2 id="timeline-heading">Immutable timeline</h2>
+              <p>Every observation remains visible, including superseded records.</p>
+            </div>
+            <span id="event-count">0 events</span>
+          </div>
+          <ol id="timeline" class="timeline"><li class="placeholder">No events recorded</li></ol>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
