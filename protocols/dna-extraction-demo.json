@@ -1,0 +1,59 @@
+{
+    "id": "dna-extraction-demo",
+    "name": "Synthetic DNA Extraction Demo",
+    "version": "1.0.0",
+    "steps": [
+        {
+            "id": "setup-metadata",
+            "title": "Confirm synthetic setup metadata",
+            "instruction": "Demo placeholder only: record a synthetic sample ID and kit lot condition, then follow your institution's approved protocol.",
+            "required_fields": [
+                "sample_id",
+                "condition.kit_lot"
+            ]
+        },
+        {
+            "id": "record-observation",
+            "title": "Record a synthetic observation",
+            "instruction": "Demo placeholder only: record what you observe without interpretation, then follow your institution's approved protocol."
+        },
+        {
+            "id": "measure-demo-signal",
+            "title": "Measure the synthetic demo signal",
+            "instruction": "Demo placeholder only: record the approved workflow's value and metadata; this is not laboratory guidance.",
+            "required_fields": [
+                "sample_id",
+                "value",
+                "unit",
+                "instrument"
+            ],
+            "expected_unit": "demo units",
+            "expected_range": {
+                "minimum": 10,
+                "maximum": 20
+            }
+        },
+        {
+            "id": "demo-timer",
+            "title": "Run the placeholder timer",
+            "instruction": "Demo placeholder only: use this timer as a product demonstration and follow your institution's approved protocol for actual timing.",
+            "timer_seconds": 10
+        },
+        {
+            "id": "confirm-irreversible-checkpoint",
+            "title": "Confirm irreversible demo checkpoint",
+            "instruction": "Demo placeholder only: explicitly confirm before recording this irreversible checkpoint; follow your institution's approved protocol for any real action.",
+            "irreversible": true
+        },
+        {
+            "id": "review-supervision-inventory",
+            "title": "Review supervision and inventory context",
+            "instruction": "Demo placeholder only: review attributed supervisor context and synthetic inventory status without changing the approved protocol."
+        },
+        {
+            "id": "final-storage-documentation",
+            "title": "Confirm final storage and documentation",
+            "instruction": "Demo placeholder only: record that institutional storage and documentation requirements were followed; this protocol does not supply those requirements."
+        }
+    ]
+}
