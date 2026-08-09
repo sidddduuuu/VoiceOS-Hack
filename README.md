@@ -5,20 +5,25 @@ turns spoken observations into MCP tool calls; LabLoop maintains protocol state,
 asks for missing metadata, records an append-only audit trail, coordinates with a
 supervisor, and prepares inventory restock requests.
 
-This branch contains the shared foundation and ten parallel implementation
-tickets. Read [the MVP specification](docs/mvp-spec.md), [the frozen contracts](docs/contracts.md),
-and [the ticket index](docs/tickets/README.md) before implementation.
+The complete MVP includes the VoiceOS MCP adapter, append-only experiment record,
+protocol validation, Slack supervision, inventory requests, macOS wake helper, and
+an animated read-only dashboard. Read [the demo guide](demo/README.md) to connect
+VoiceOS and rehearse the synthetic DNA extraction flow.
 
-## Foundation check
+## Quality check
 
 ```bash
 PYTHONPATH=src python -m unittest discover -s tests -v
 ```
 
-## Parallel workflow
+## Launch the dashboard
 
-1. Merge this foundation into `main`.
-2. Create one Conductor workspace per ticket from the updated `main`.
-3. Give each workspace exactly one file from `docs/tickets/`.
-4. Merge completed ticket branches in numeric order.
-5. Run a final integration pass after all ten branches are present.
+```bash
+PYTHONPATH=src python demo/seed.py --db "$PWD/.context/labloop-demo.db"
+LABLOOP_DB_PATH="$PWD/.context/labloop-demo.db" \
+LABLOOP_PROTOCOL_DIR="$PWD/protocols" \
+PYTHONPATH=src python -m labloop.dashboard
+```
+
+Open `http://127.0.0.1:8765`. The dashboard displays live state but cannot write
+to the experiment record.

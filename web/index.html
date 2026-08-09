@@ -4,106 +4,294 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
-    <title>LabLoop Live Record</title>
+    <meta name="theme-color" content="#f7f7f8">
+    <title>LabLoop | Live research record</title>
+    <link rel="stylesheet" href="/tokens.css">
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/motion.css">
     <script src="/app.js" defer></script>
   </head>
-  <body>
-    <header class="masthead">
-      <a class="brand" href="#dashboard" aria-label="LabLoop dashboard home">
-        <span class="brand-mark" aria-hidden="true">LL</span>
-        <span>LabLoop <strong>Live record</strong></span>
+  <body data-phase="loading">
+    <a class="skip-link" href="#live-record">Skip to the live experiment</a>
+
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="LabLoop home">
+        <svg class="wordmark-mark" viewBox="0 0 34 28" aria-hidden="true">
+          <path d="M3 4v18h12V10h8v14h8" />
+          <circle cx="23" cy="7" r="3" />
+        </svg>
+        <span>LabLoop</span>
       </a>
-      <div class="connection" role="status" aria-live="polite">
-        <span id="connection-dot" class="connection-dot"></span>
+      <nav aria-label="Page sections">
+        <a href="#live-record">Live record</a>
+        <a href="#signals">Signals</a>
+        <a href="#history">History</a>
+      </nav>
+      <div class="connection-state" role="status" aria-live="polite" aria-atomic="true">
+        <span id="connection-dot" class="connection-dot" aria-hidden="true"></span>
         <span id="connection-label">Connecting</span>
-        <time id="last-sync">—</time>
+        <time id="last-sync" datetime="">Waiting</time>
       </div>
     </header>
 
-    <main id="dashboard" class="dashboard">
-      <aside class="run-rail" aria-labelledby="run-heading">
-        <div>
-          <p class="section-code">RUN SELECTOR</p>
-          <h1 id="run-heading">Research session</h1>
-          <p class="rail-copy">Read-only telemetry from the shared experiment record.</p>
-        </div>
-        <label for="run-select">Active run</label>
-        <select id="run-select" disabled>
-          <option>Loading runs…</option>
-        </select>
-        <p id="view-state" class="view-state" role="status">Connecting to LabLoop…</p>
-        <dl class="rail-meta">
-          <div><dt>Refresh</dt><dd>Every 1 second</dd></div>
-          <div><dt>Mode</dt><dd>Observe only</dd></div>
-        </dl>
-      </aside>
-
-      <div class="workspace" aria-live="polite" aria-busy="true">
-        <section id="run-hero" class="run-hero" aria-labelledby="protocol-name">
-          <div class="hero-main">
-            <p id="protocol-version" class="hero-code">PROTOCOL —</p>
-            <h2 id="protocol-name">Waiting for a run</h2>
-            <div class="hero-meta">
-              <span id="operator">Operator —</span>
-              <span id="run-status" class="status-badge">Loading</span>
-            </div>
-          </div>
-          <div class="step-readout">
-            <span>Current step</span>
-            <strong id="step-number">—</strong>
-            <p id="step-detail">Awaiting experiment data</p>
-          </div>
-        </section>
-
-        <section class="data-strip" aria-label="Run overview">
-          <div class="samples-panel">
-            <div class="section-heading">
-              <h2>Samples</h2><span id="sample-count">0 tracked</span>
-            </div>
-            <div id="samples" class="chip-list"><span class="placeholder">No samples yet</span></div>
-          </div>
-          <div class="measurements-panel">
-            <div class="section-heading">
-              <h2>Latest measurements</h2><span>Recorded data</span>
-            </div>
-            <ol id="measurements" class="compact-list"><li class="placeholder">No measurements yet</li></ol>
-          </div>
-        </section>
-
-        <div class="signal-grid">
-          <section class="signal-panel alert-panel" aria-labelledby="deviations-heading">
-            <div class="section-heading">
-              <h2 id="deviations-heading">Deviations</h2><span id="deviation-count">0 flags</span>
-            </div>
-            <ol id="deviations" class="signal-list"><li class="placeholder">No deviations recorded</li></ol>
-          </section>
-          <section class="signal-panel" aria-labelledby="messages-heading">
-            <div class="section-heading">
-              <h2 id="messages-heading">Supervisor channel</h2><span id="message-count">0 messages</span>
-            </div>
-            <ol id="messages" class="signal-list"><li class="placeholder">No supervisor messages</li></ol>
-          </section>
-        </div>
-
-        <section class="inventory-panel" aria-labelledby="inventory-heading">
-          <div class="section-heading">
-            <h2 id="inventory-heading">Inventory watch</h2><span id="request-count">0 pending restocks</span>
-          </div>
-          <div id="inventory" class="inventory-list"><p class="placeholder">Loading inventory…</p></div>
-        </section>
-
-        <section class="timeline-panel" aria-labelledby="timeline-heading">
-          <div class="timeline-title">
+    <main id="top">
+      <section class="editorial-hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <h1 id="page-title">
+            <span>LabLoop</span>
+            <em>Research intelligence, present at the bench.</em>
+          </h1>
+          <p class="hero-thesis">
+            VoiceOS turns what you say into action. LabLoop keeps the approved
+            protocol, every reading, and every decision in one living record.
+          </p>
+          <dl class="hero-context" aria-label="Current experiment summary">
             <div>
-              <h2 id="timeline-heading">Immutable timeline</h2>
-              <p>Every observation remains visible, including superseded records.</p>
+              <dt>Protocol</dt>
+              <dd id="hero-protocol">Waiting for a run</dd>
             </div>
-            <span id="event-count">0 events</span>
+            <div>
+              <dt>Current state</dt>
+              <dd id="hero-state">Connecting to LabLoop</dd>
+            </div>
+          </dl>
+          <a class="hero-jump" href="#live-record">
+            View the live record
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+
+        <figure id="lab-apparatus" class="lab-apparatus" data-step="0" data-state="loading">
+          <svg viewBox="0 0 760 580" role="img" aria-labelledby="apparatus-title apparatus-desc">
+            <title id="apparatus-title">The LabLoop experiment system</title>
+            <desc id="apparatus-desc">Samples travel through an approved protocol to measurement, supervision, inventory, and an immutable record.</desc>
+
+            <g class="apparatus-shadow" aria-hidden="true">
+              <path d="M86 418 381 268l294 142-297 151Z" />
+            </g>
+
+            <g class="apparatus-track" aria-hidden="true">
+              <path class="track-under" d="M68 369 197 434l122-61 174 87 190-96" />
+              <path class="track-top" d="M68 355 197 420l122-61 174 87 190-96" />
+              <path class="track-return" d="M129 286 258 351l105-53" />
+            </g>
+
+            <g class="apparatus-samples" aria-hidden="true">
+              <g class="sample-vial sample-one">
+                <path d="M85 308h35l-4 65-13 8-14-8Z" />
+                <path class="vial-liquid" d="M89 345h27v29l-13 7-14-8Z" />
+                <path d="M82 299h41v13H82Z" />
+              </g>
+              <g class="sample-vial sample-two">
+                <path d="M139 336h30l-4 54-11 7-12-7Z" />
+                <path class="vial-liquid" d="M142 366h23v25l-11 6-12-7Z" />
+                <path d="M136 328h36v12h-36Z" />
+              </g>
+            </g>
+
+            <g class="measurement-chamber" aria-hidden="true">
+              <path class="chamber-base" d="M282 357 376 309l94 47-94 49Z" />
+              <path class="chamber-column" d="M326 202h100v156l-50 27-50-26Z" />
+              <ellipse class="chamber-cap" cx="376" cy="204" rx="50" ry="25" />
+              <ellipse class="chamber-core" cx="376" cy="204" rx="25" ry="12" />
+              <g class="chamber-ring ring-one">
+                <ellipse cx="376" cy="184" rx="78" ry="33" />
+              </g>
+              <g class="chamber-ring ring-two">
+                <ellipse cx="376" cy="184" rx="38" ry="76" transform="rotate(28 376 184)" />
+              </g>
+              <circle class="chamber-signal" cx="376" cy="181" r="12" />
+            </g>
+
+            <g class="supervisor-relay" aria-hidden="true">
+              <path d="M526 249 594 215l69 34-69 35Z" />
+              <path d="M548 172h91v80l-45 24-46-23Z" />
+              <path class="relay-screen" d="m565 193 29-15 29 15v34l-29 16-29-15Z" />
+              <path class="relay-line" d="M578 209h32M578 218h23" />
+            </g>
+
+            <g class="inventory-reservoir" aria-hidden="true">
+              <ellipse cx="567" cy="396" rx="48" ry="22" />
+              <path d="M519 396v70c0 13 21 23 48 23s48-10 48-23v-70" />
+              <path class="reservoir-fill" d="M524 436v30c0 10 19 18 43 18s43-8 43-18v-30c-12 7-27 11-43 11s-31-4-43-11Z" />
+              <ellipse class="reservoir-top" cx="567" cy="436" rx="43" ry="18" />
+            </g>
+
+            <g class="record-archive" aria-hidden="true">
+              <path d="M211 168 286 130l78 39-76 39Z" />
+              <path d="M224 172v65l64 32 64-32v-65l-64 33Z" />
+              <path class="archive-page" d="m249 179 39-20 39 20-39 20Z" />
+              <path class="archive-line" d="m259 182 29-15 28 14M264 190l24-12 21 10" />
+            </g>
+
+            <g class="protocol-nodes" aria-hidden="true">
+              <circle class="protocol-node node-1" cx="130" cy="386" r="10" />
+              <circle class="protocol-node node-2" cx="216" cy="405" r="10" />
+              <circle class="protocol-node node-3" cx="305" cy="362" r="10" />
+              <circle class="protocol-node node-4" cx="421" cy="392" r="10" />
+              <circle class="protocol-node node-5" cx="508" cy="435" r="10" />
+              <circle class="protocol-node node-6" cx="598" cy="393" r="10" />
+              <circle class="protocol-node node-7" cx="671" cy="355" r="10" />
+              <circle class="flow-token token-one" cx="154" cy="398" r="7" />
+              <circle class="flow-token token-two" cx="461" cy="412" r="6" />
+            </g>
+
+            <g class="apparatus-labels" aria-hidden="true">
+              <text x="67" y="280">samples</text>
+              <text x="326" y="102">measurement</text>
+              <text x="548" y="151">supervision</text>
+              <text x="531" y="520">inventory</text>
+              <text x="226" y="115">record</text>
+            </g>
+          </svg>
+          <figcaption>
+            <span id="apparatus-caption">Approved protocol path awaiting live data</span>
+            <span>Original LabLoop system view</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="voice-presence" class="voice-presence" data-voice-state="processing" aria-labelledby="voice-heading">
+        <div class="voice-copy">
+          <span class="voice-orb" aria-hidden="true"><i></i></span>
+          <div>
+            <h2 id="voice-heading">Voice to verified record</h2>
+            <p id="voice-label">LabLoop connection activity: establishing</p>
           </div>
-          <ol id="timeline" class="timeline"><li class="placeholder">No events recorded</li></ol>
+        </div>
+        <div class="voice-wave" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <ol class="voice-path" aria-label="Voice command path">
+          <li><span>VoiceOS</span><small>intent</small></li>
+          <li><span>LabLoop</span><small>validation</small></li>
+          <li><span>Live record</span><small>append-only</small></li>
+        </ol>
+      </section>
+
+      <section id="live-record" class="live-console" aria-labelledby="live-heading">
+        <header class="console-header">
+          <div>
+            <p class="console-mode">Read-only experiment telemetry</p>
+            <h2 id="live-heading">The experiment is already talking.</h2>
+            <p id="view-state" class="view-state" role="status">Connecting to LabLoop…</p>
+          </div>
+          <div class="run-picker">
+            <label for="run-select">Research session</label>
+            <select id="run-select" disabled>
+              <option>Loading runs…</option>
+            </select>
+          </div>
+        </header>
+
+        <section class="run-stage" aria-labelledby="protocol-name">
+          <div class="protocol-identity">
+            <div class="protocol-line">
+              <span id="protocol-version">Approved protocol: waiting</span>
+              <span id="run-status" class="status-tag">Loading</span>
+            </div>
+            <h3 id="protocol-name">Waiting for a research session</h3>
+            <p id="step-detail">Protocol instructions will appear from the recorded run.</p>
+            <dl class="run-meta">
+              <div><dt>Operator</dt><dd id="operator">Waiting</dd></div>
+              <div><dt>Started</dt><dd id="started-at">Waiting</dd></div>
+              <div><dt>Record</dt><dd>Append-only</dd></div>
+            </dl>
+          </div>
+          <div class="step-focus">
+            <span>Current step</span>
+            <strong id="step-number">00</strong>
+            <p id="step-title">Awaiting approved protocol state</p>
+          </div>
+          <div class="sample-rail">
+            <div class="section-label">
+              <h3>Samples in this run</h3>
+              <span id="sample-count">0 tracked</span>
+            </div>
+            <div id="samples" class="sample-list"><span class="empty-copy">No samples recorded</span></div>
+          </div>
         </section>
-      </div>
+
+        <section class="measurement-observatory" aria-labelledby="measurements-heading">
+          <div class="measurement-lead">
+            <div class="section-label">
+              <h3 id="measurements-heading">Measurement observatory</h3>
+              <span id="measurement-count">0 readings</span>
+            </div>
+            <div class="latest-reading">
+              <span id="latest-sample">Latest recorded value</span>
+              <strong id="latest-value">Waiting</strong>
+              <span id="latest-meta">No measurement recorded</span>
+            </div>
+          </div>
+          <div class="range-panel" id="range-panel" data-range-state="empty">
+            <div class="range-copy">
+              <span>Approved protocol range</span>
+              <strong id="range-label">Not recorded</strong>
+            </div>
+            <div class="range-track" aria-hidden="true">
+              <span id="range-marker" class="range-marker"></span>
+            </div>
+            <p id="range-note">LabLoop does not infer a range when one is absent.</p>
+          </div>
+          <ol id="measurements" class="measurement-history"><li class="empty-copy">No measurements recorded</li></ol>
+        </section>
+      </section>
+
+      <section id="signals" class="signals-surface" aria-labelledby="signals-heading">
+        <header class="surface-heading">
+          <div>
+            <h2 id="signals-heading">Signals that deserve attention</h2>
+            <p>Automated protocol checks stay distinct from attributed human guidance.</p>
+          </div>
+          <span id="signal-count">0 active signals</span>
+        </header>
+
+        <div class="signal-relay">
+          <section class="protocol-watch" aria-labelledby="deviations-heading">
+            <div class="section-label">
+              <h3 id="deviations-heading">Protocol watch</h3>
+              <span id="deviation-count">0 flags</span>
+            </div>
+            <ol id="deviations" class="signal-list"><li class="empty-copy">No deviations recorded</li></ol>
+          </section>
+          <section class="supervisor-watch" aria-labelledby="messages-heading">
+            <div class="section-label">
+              <h3 id="messages-heading">Supervisor relay</h3>
+              <span id="message-count">0 messages</span>
+            </div>
+            <ol id="messages" class="signal-list"><li class="empty-copy">No supervisor messages recorded</li></ol>
+          </section>
+        </div>
+
+        <section class="inventory-flow" aria-labelledby="inventory-heading">
+          <div class="surface-heading inventory-heading">
+            <div>
+              <h2 id="inventory-heading">Material flow</h2>
+              <p>Thresholds create requests. A human still approves every purchase.</p>
+            </div>
+            <span id="request-count">0 pending requests</span>
+          </div>
+          <div id="inventory" class="inventory-list"><p class="empty-copy">Loading inventory…</p></div>
+        </section>
+      </section>
+
+      <section id="history" class="history-surface" aria-labelledby="timeline-heading">
+        <header class="history-heading">
+          <div>
+            <h2 id="timeline-heading">Nothing important disappears.</h2>
+            <p>Observations, corrections, decisions, and their sources remain visible in order.</p>
+          </div>
+          <span id="event-count">0 events</span>
+        </header>
+        <ol id="timeline" class="timeline"><li class="empty-copy">No events recorded</li></ol>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <span>LabLoop</span>
+      <p>A VoiceOS-connected research copilot. Approved protocols remain authoritative.</p>
+      <a href="#top">Back to top ↑</a>
+    </footer>
   </body>
 </html>

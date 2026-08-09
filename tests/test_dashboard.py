@@ -10,8 +10,11 @@ from unittest.mock import patch
 from labloop.contracts import (
     AuditEvent,
     EventKind,
+    ExpectedRange,
     ExperimentRun,
     InventoryItem,
+    Protocol,
+    ProtocolStep,
     PurchaseRequest,
     RunStatus,
 )
@@ -81,11 +84,32 @@ class DashboardTests(unittest.TestCase):
         web_dir = Path(self.temp_dir.name)
         (web_dir / "index.html").write_text("<main>LabLoop</main>", encoding="utf-8")
         (web_dir / "app.js").write_text("'use strict';", encoding="utf-8")
+        (web_dir / "tokens.css").write_text(":root {}", encoding="utf-8")
         (web_dir / "styles.css").write_text("body {}", encoding="utf-8")
+        (web_dir / "motion.css").write_text("", encoding="utf-8")
         self.events = MockEventStore()
         self.inventory = MockInventoryStore()
+        self.protocols = {
+            "dna-demo": Protocol(
+                id="dna-demo",
+                name="DNA Demo",
+                version="1.0",
+                steps=(
+                    ProtocolStep("step-1", "Prepare", "Prepare the recorded samples."),
+                    ProtocolStep("step-2", "Observe", "Record an observation."),
+                    ProtocolStep(
+                        "step-3",
+                        "Measure",
+                        "Record the approved measurement.",
+                        expected_unit="demo units",
+                        expected_range=ExpectedRange(10, 20),
+                    ),
+                ),
+            )
+        }
         self.server = ThreadingHTTPServer(
-            ("127.0.0.1", 0), _handler_class(self.events, self.inventory, web_dir)
+            ("127.0.0.1", 0),
+            _handler_class(self.events, self.inventory, web_dir, self.protocols),
         )
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.thread.start()
@@ -114,7 +138,9 @@ class DashboardTests(unittest.TestCase):
             ("/api/inventory", "application/json", None),
             ("/", "text/html", None),
             ("/app.js", "application/javascript", None),
+            ("/tokens.css", "text/css", None),
             ("/styles.css", "text/css", None),
+            ("/motion.css", "text/css", None),
         )
         for path, content_type, expected in cases:
             with self.subTest(path=path):
@@ -136,6 +162,10 @@ class DashboardTests(unittest.TestCase):
         self.assertEqual(payload["run"]["sample_ids"], ["sample-a", "sample-b"])
         self.assertEqual(payload["events"][0]["payload"]["values"], [1.5, 2.0])
         self.assertEqual(payload["events"][0]["payload"]["nested"]["kind"], "deviation")
+        self.assertEqual(payload["protocol"]["name"], "DNA Demo")
+        self.assertEqual(payload["protocol"]["step_count"], 3)
+        self.assertEqual(payload["current_step"]["id"], "step-3")
+        self.assertEqual(payload["current_step"]["expected_range"], {"minimum": 10, "maximum": 20})
 
     def test_unknown_malformed_and_store_failure_are_safe(self) -> None:
         for path, expected in (

@@ -1,0 +1,31 @@
+:root {
+  color-scheme: light;
+  --canvas: oklch(0.985 0.004 285);
+  --surface: oklch(0.955 0.007 285);
+  --surface-strong: oklch(0.91 0.012 285);
+  --ink: oklch(0.18 0.014 285);
+  --ink-soft: oklch(0.4 0.018 285);
+  --rule: oklch(0.82 0.014 285);
+  --console: oklch(0.17 0.016 285);
+  --console-raised: oklch(0.22 0.018 285);
+  --console-text: oklch(0.96 0.006 285);
+  --console-muted: oklch(0.76 0.016 285);
+  --lilac: oklch(0.73 0.055 296);
+  --lilac-deep: oklch(0.48 0.09 296);
+  --blue: oklch(0.62 0.145 253);
+  --copper: oklch(0.67 0.105 52);
+  --success: oklch(0.56 0.13 155);
+  --warning: oklch(0.67 0.13 70);
+  --blocking: oklch(0.52 0.19 28);
+  --focus: oklch(0.54 0.17 253);
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --content: min(100% - 48px, 1380px);
+  --text: min(100%, 72ch);
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  font-family: var(--sans);
+}

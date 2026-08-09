@@ -23,7 +23,9 @@ STATIC_ROUTES = {
     "/": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/app.js": ("app.js", "application/javascript; charset=utf-8"),
+    "/tokens.css": ("tokens.css", "text/css; charset=utf-8"),
     "/styles.css": ("styles.css", "text/css; charset=utf-8"),
+    "/motion.css": ("motion.css", "text/css; charset=utf-8"),
 }
 SECURITY_HEADERS = {
     "Content-Security-Policy": (
@@ -55,7 +57,14 @@ def _json_bytes(value: Any) -> bytes:
     ).encode("utf-8")
 
 
-def _handler_class(event_store: Any, inventory_store: Any, web_dir: Path = WEB_DIR):
+def _handler_class(
+    event_store: Any,
+    inventory_store: Any,
+    web_dir: Path = WEB_DIR,
+    protocols: Mapping[str, Any] | None = None,
+):
+    loaded_protocols = protocols or {}
+
     class DashboardHandler(BaseHTTPRequestHandler):
         server_version = "LabLoopDashboard/1"
 
@@ -126,11 +135,23 @@ def _handler_class(event_store: Any, inventory_store: Any, web_dir: Path = WEB_D
             if run is None:
                 self._send_json(404, {"error": "run not found"}, head_only)
                 return
-            self._send_json(
-                200,
-                {"run": run, "events": event_store.list_events(run_id)},
-                head_only,
-            )
+            payload: dict[str, Any] = {
+                "run": run,
+                "events": event_store.list_events(run_id),
+                "protocol": None,
+                "current_step": None,
+            }
+            protocol = loaded_protocols.get(run.protocol_id)
+            if protocol is not None and protocol.version == run.protocol_version:
+                payload["protocol"] = {
+                    "id": protocol.id,
+                    "name": protocol.name,
+                    "version": protocol.version,
+                    "step_count": len(protocol.steps),
+                }
+                if 0 <= run.current_step_index < len(protocol.steps):
+                    payload["current_step"] = protocol.steps[run.current_step_index]
+            self._send_json(200, payload, head_only)
 
         def _method_not_allowed(self) -> None:
             self._send_json(
@@ -185,15 +206,20 @@ def _port_from_environment() -> int:
 
 def main() -> None:
     from labloop.inventory import InventoryStore
+    from labloop.protocols import load_protocols
     from labloop.storage import EventStore
 
     raw_db_path = os.environ.get("LABLOOP_DB_PATH", "./labloop.db")
     if not raw_db_path.strip() or "\0" in raw_db_path:
         raise ValueError("LABLOOP_DB_PATH must be a non-empty filesystem path")
     db_path = Path(raw_db_path)
+    raw_protocol_dir = os.environ.get("LABLOOP_PROTOCOL_DIR", "./protocols")
+    if not raw_protocol_dir.strip() or "\0" in raw_protocol_dir:
+        raise ValueError("LABLOOP_PROTOCOL_DIR must be a non-empty filesystem path")
+    protocols = load_protocols(Path(raw_protocol_dir))
     server = ThreadingHTTPServer(
         (HOST, _port_from_environment()),
-        _handler_class(EventStore(db_path), InventoryStore(db_path)),
+        _handler_class(EventStore(db_path), InventoryStore(db_path), protocols=protocols),
     )
     try:
         server.serve_forever()
