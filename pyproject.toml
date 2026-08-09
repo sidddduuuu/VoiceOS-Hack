@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "labloop"
+version = "0.1.0"
+description = "A VoiceOS-connected, stateful research copilot"
+requires-python = ">=3.11"
+dependencies = ["mcp>=1.0,<2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
