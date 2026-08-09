@@ -153,7 +153,7 @@ def seed_database(database: Path, reset: bool = False) -> dict[str, int]:
         from labloop.service import LabLoopService
         from labloop.storage import EventStore
     except ImportError as exc:
-        raise RuntimeError("seed requires merged LabLoop tickets 01, 02, 04, and 05") from exc
+        raise RuntimeError("seed requires merged LabLoop tickets 01 through 05") from exc
 
     prepare_database(database, reset)
     inventory = InventoryStore(database)
